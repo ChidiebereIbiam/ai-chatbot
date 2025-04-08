@@ -1,6 +1,5 @@
-# pages/chat_page.py
 import streamlit as st
-from utils.db_utils import get_user_profile
+from utils.db_utils import get_user_profile, get_user_messages, save_message, clear_user_messages
 from backends.ai_backend import ChatAI
 import datetime
 import os
@@ -20,13 +19,28 @@ def show():
     """Display the chat interface with improved UI."""
     # Now the sidebar will only show on this page
     if 'messages' not in st.session_state:
-        st.session_state.messages = []
-        # Add initial welcome message
-        st.session_state.messages.append({
-            "role": "assistant",
-            "content": f"Hello {st.session_state['username']}! How can I help you today?",
-            "timestamp": datetime.datetime.now().strftime("%H:%M")
-        })
+        # Load messages from database
+        loaded_messages = get_user_messages(st.session_state['username'])
+        
+        if loaded_messages:
+            # Use messages from database
+            st.session_state.messages = loaded_messages
+        else:
+            # Initialize with welcome message if no messages found
+            st.session_state.messages = []
+            welcome_message = {
+                "role": "assistant",
+                "content": f"Hello {st.session_state['username']}! How can I help you today?",
+                "timestamp": datetime.datetime.now().strftime("%H:%M")
+            }
+            st.session_state.messages.append(welcome_message)
+            # Save welcome message to database
+            save_message(
+                st.session_state['username'],
+                welcome_message["role"],
+                welcome_message["content"],
+                welcome_message["timestamp"]
+            )
 
     # Custom CSS for message alignment
     st.markdown("""
@@ -79,6 +93,25 @@ def show():
         st.markdown("---")
         st.subheader("Settings")
         theme = st.selectbox("Chat Theme", ["Light", "Dark", "Auto"])
+        
+        # Add a button to clear chat history
+        if st.button("Clear Chat History", use_container_width=True):
+            clear_user_messages(st.session_state['username'])
+            st.session_state.messages = []
+            welcome_message = {
+                "role": "assistant",
+                "content": f"Hello {st.session_state['username']}! How can I help you today?",
+                "timestamp": datetime.datetime.now().strftime("%H:%M")
+            }
+            st.session_state.messages.append(welcome_message)
+            save_message(
+                st.session_state['username'],
+                welcome_message["role"],
+                welcome_message["content"],
+                welcome_message["timestamp"]
+            )
+            st.rerun()
+            
         st.markdown("---")
         if st.button("Logout", use_container_width=True):
             logout()  # Use the improved logout function
@@ -101,11 +134,20 @@ def show():
     if prompt:
         # Add user message to chat
         timestamp = datetime.datetime.now().strftime("%H:%M")
-        st.session_state.messages.append({
+        user_message = {
             "role": "user",
             "content": prompt,
             "timestamp": timestamp
-        })
+        }
+        st.session_state.messages.append(user_message)
+        
+        # Save user message to database
+        save_message(
+            st.session_state['username'],
+            user_message["role"],
+            user_message["content"],
+            user_message["timestamp"]
+        )
         
         # Rerun to display the user message immediately
         st.rerun()
@@ -172,11 +214,20 @@ def show():
                     )
         
         # Add the complete AI response to the session state
-        st.session_state.messages.append({
+        ai_message = {
             "role": "assistant",
             "content": full_response,
             "timestamp": timestamp
-        })
+        }
+        st.session_state.messages.append(ai_message)
+        
+        # Save AI response to database
+        save_message(
+            st.session_state['username'],
+            ai_message["role"],
+            ai_message["content"],
+            ai_message["timestamp"]
+        )
         
         # Rerun to update UI
         st.rerun()
