@@ -1,0 +1,68 @@
+/* style.css */
+
+/* General styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Chat message styling */
+.stChatMessage {
+    border-radius: 15px;
+    padding: 10px;
+    margin: 5px 0;
+}
+
+/* User message styling */
+.stChatMessage[data-testid="stChatMessageUser"] {
+    background-color: rgba(240, 242, 246, 0.5);
+}
+
+/* Assistant message styling */
+.stChatMessage[data-testid="stChatMessageAssistant"] {
+    background-color: rgba(230, 240, 255, 0.5);
+}
+
+/* Form styling */
+div[data-testid="stForm"] {
+    border: 1px solid #f0f2f6;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Button styling */
+button {
+    border-radius: 5px !important;
+    transition: all 0.3s ease !important;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Sidebar styling */
+section[data-testid="stSidebar"] {
+    background-color: #f8f9fa;
+    padding: 1rem;
+}
+
+/* Chat input styling */
+textarea[aria-label="Ask me anything..."] {
+    border-radius: 20px;
+    border: 1px solid #e0e0e0;
+    padding: 10px 15px;
+}
+
+/* Header styling */
+h1, h2, h3 {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+/* Timestamp styling */
+.stChatMessage p:first-child {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 5px;
+}
