@@ -3,9 +3,23 @@ import streamlit as st
 from utils.db_utils import get_user_profile
 from backends import ai_backend
 import datetime
+import os
+
+def logout():
+    """Log out user and clear session cookie"""
+    st.session_state.clear()
+    # Remove session cookie file
+    if os.path.exists(".session_cookie"):
+        try:
+            os.remove(".session_cookie")
+        except:
+            pass  # If there's any error, just proceed with logout
+    st.rerun()
 
 def show():
     """Display the chat interface with improved UI."""
+    # Now the sidebar will only show on this page
+    
     if 'messages' not in st.session_state:
         st.session_state.messages = []
         # Add initial welcome message
@@ -33,8 +47,7 @@ def show():
         
         st.markdown("---")
         if st.button("Logout", use_container_width=True):
-            st.session_state.clear()
-            st.rerun()
+            logout()  # Use the improved logout function
     
     # Main chat area
     st.title("AI Assistant Chat")

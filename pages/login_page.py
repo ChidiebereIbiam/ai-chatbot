@@ -22,6 +22,7 @@ def show():
             if authenticate_user(username, password):
                 st.session_state['authenticated'] = True
                 st.session_state['username'] = username
+                # Authentication saved in main app.py
                 st.rerun()
             else:
                 st.error("Invalid username or password")

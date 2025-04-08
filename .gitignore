@@ -173,3 +173,4 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 ai_chat.db
+.session_cookie
