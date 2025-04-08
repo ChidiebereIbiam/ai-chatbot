@@ -9,10 +9,10 @@ init_db()
 
 # Set page configuration
 st.set_page_config(
-    page_title="AI Chat Assistant",
+    page_title="CSC Dept. AI Chat Assistant",
     page_icon="💬",
     layout="wide",
-    initial_sidebar_state="collapsed"  # Default to collapsed
+    initial_sidebar_state="collapsed" 
 )
 
 # Function to hide sidebar for login and register pages

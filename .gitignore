@@ -174,3 +174,4 @@ cython_debug/
 .pypirc
 ai_chat.db
 .session_cookie
+chroma_db/
